@@ -24,6 +24,12 @@ class Words
      */
     private $text;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Language::class, inversedBy="words")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $language;
+
     public function __construct()
     {
         $this->language = new ArrayCollection();
@@ -43,6 +49,18 @@ class Words
     public function setText(string $text): self
     {
         $this->text = $text;
+
+        return $this;
+    }
+
+    public function getLanguage(): ?Language
+    {
+        return $this->language;
+    }
+
+    public function setLanguage(?Language $language): self
+    {
+        $this->language = $language;
 
         return $this;
     }

@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\LanguageRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -26,6 +28,16 @@ class Language
      * @ORM\Column(type="string", length=4)
      */
     private $shorthand;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Words::class, mappedBy="language", orphanRemoval=true)
+     */
+    private $words;
+
+    public function __construct()
+    {
+        $this->words = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -52,6 +64,36 @@ class Language
     public function setShorthand(string $shorthand): self
     {
         $this->shorthand = $shorthand;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Words[]
+     */
+    public function getWords(): Collection
+    {
+        return $this->words;
+    }
+
+    public function addWord(Words $word): self
+    {
+        if (!$this->words->contains($word)) {
+            $this->words[] = $word;
+            $word->setLanguage($this);
+        }
+
+        return $this;
+    }
+
+    public function removeWord(Words $word): self
+    {
+        if ($this->words->removeElement($word)) {
+            // set the owning side to null (unless already changed)
+            if ($word->getLanguage() === $this) {
+                $word->setLanguage(null);
+            }
+        }
 
         return $this;
     }
