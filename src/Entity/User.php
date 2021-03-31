@@ -38,6 +38,11 @@ class User implements UserInterface
      */
     private $password;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Team::class, inversedBy="users")
+     */
+    private $team;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -112,5 +117,17 @@ class User implements UserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public function getTeam(): ?Team
+    {
+        return $this->team;
+    }
+
+    public function setTeam(?Team $team): self
+    {
+        $this->team = $team;
+
+        return $this;
     }
 }
